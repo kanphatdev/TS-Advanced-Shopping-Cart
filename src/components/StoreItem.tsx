@@ -1,5 +1,6 @@
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { formatCurrency } from "../utilities/formatCurrency";
+import { useShoppingCart } from "../context/ShoppingCartContext";
 
 type StoreItemProps = {
   id: number;
@@ -9,8 +10,14 @@ type StoreItemProps = {
 };
 
 const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
-  const quantity = 1; // Placeholder quantity (no functionality)
-
+ 
+  const {
+    getItemQuantity,
+    increaseCartQuantity,
+    decreaseCartQuantity,
+    removeFromCart,
+  } = useShoppingCart();
+   const quantity = getItemQuantity(id); // Placeholder quantity (no functionality)
   return (
     <div className="card bg-base-300 shadow-xl rounded-2xl overflow-hidden border border-gray-200 w-80">
       <figure>
@@ -26,24 +33,24 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
 
         <div className="mt-4">
           {quantity === 0 ? (
-            <button className="btn btn-accent w-full flex items-center gap-2">
+            <button className="btn btn-accent w-full flex items-center gap-2" onClick={() => increaseCartQuantity(id)}>
               <ShoppingBag className="w-5 h-5" />
               Add to Cart
             </button>
           ) : (
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-3 bg-base-200 p-2 rounded-lg shadow-inner">
-                <button className="btn btn-sm btn-success">
+                <button className="btn btn-sm btn-success"  onClick={() => increaseCartQuantity(id)}>
                   <Plus />
                 </button>
                 <span className="text-lg font-semibold text-gray-700">
                   {quantity}
                 </span>
-                <button className="btn btn-sm btn-error">
+                <button className="btn btn-sm btn-error" onClick={() => decreaseCartQuantity(id)}>
                   <Minus />
                 </button>
               </div>
-              <button className="btn btn-error w-full flex items-center gap-2">
+              <button className="btn btn-error w-full flex items-center gap-2"  onClick={() => removeFromCart(id)}>
                 <Trash2 className="w-5 h-5" />
                 Remove from Cart
               </button>
